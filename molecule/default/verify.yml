@@ -1,0 +1,15 @@
+---
+- name: Veriy playbook
+  hosts: instance
+  become: true
+  tasks:
+  - name: Get service status
+    service_facts:
+    register: service_state
+
+  - name: Assert that httpd service is running
+    assert:
+      that:
+        - service_state.ansible_facts.services['httpd.service']['state'] == "running"
+      fail_msg: "httpd service is not running"
+      success_msg: "verified - httpd service is running"
